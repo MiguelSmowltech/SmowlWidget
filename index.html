@@ -1,500 +1,516 @@
-    <!DOCTYPE html>
-    <html lang="es">
-       <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Smowltech Widget</title>
-          <!-- Incluye FontAwesome -->
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-          <style>
-             @keyframes recording-pulse {
-             0% {
-             transform: scale(1);
-             opacity: 0.8;
-             }
-             50% {
-             transform: scale(1.4);
-             opacity: 0.9;
-             }
-             100% {
-             transform: scale(1);
-             opacity: 1;
-             }
-             }
-             @keyframes loader-animation {
-             0% {
-             width: 0;
-             }
-             50% {
-             width: 100%;
-             }
-             100% {
-             width: 0;
-             }
-             }
-             :root {
-             /* Font Sizes */
-             --font-size-100: 0.75rem;
-             --font-size-200: 0.875rem;
-             --font-size-300: 1rem;
-             --font-size-400: 1.25rem;
-             --font-size-500: 1.5rem;
-             --font-size-600: 2rem;
-             --font-size-700: 2.5rem;
-             --font-size-800: 3rem;
-             --font-size-900: 4rem;
-             --font-size-1000: 5rem;
-             /* Line Heights */
-             --line-height-100: 1rem;
-             --line-height-200: 1.25rem;
-             --line-height-300: 1.5rem;
-             --line-height-400: 2rem;
-             --line-height-500: 2.5rem;
-             --line-height-600: 3rem;
-             --line-height-700: 4rem;
-             --line-height-800: 5rem;
-             /* Font Family */
-             --font-family-montserrat: Montserrat;
-             /* Font Weights */
-             --font-weight-regular: 400;
-             --font-weight-medium: 500;
-             --font-weight-semibold: 600;
-             --font-weight-bold: 700;
-             /* Colors */
-             --color-brand-100: #D1F1FF;
-             --color-brand-200: #9EE2FF;
-             --color-brand-300: #6BD2FF;
-             --color-brand-400: #05B4FF;
-             --color-brand-500: #0092D1;
-             --color-brand-600: #006E9E;
-             --color-brand-700: #004B6B;
-             --color-neutrals-0: #FFFFFF;
-             --color-neutrals-100: #E9E9EC;
-             --color-neutrals-200: #E0E0E4;
-             --color-neutrals-300: #D9D9DE;
-             --color-neutrals-400: #CCCCD3;
-             --color-neutrals-500: #ADADB5;
-             --color-neutrals-600: #8F959B;
-             --color-primary-100: #EBEBEE;
-             --color-primary-200: #E0E0E4;
-             --color-primary-300: #CCCCD3;
-             --color-primary-400: #ADADB5;
-             --color-primary-500: #7C828A;
-             --color-primary-600: #5C6573;
-             --color-primary-700: #1C304B;
-             --color-primary-800: #0B131E;
-             --color-semantic-alert-100: #FFE099;
-             --color-semantic-alert-200: #FFD166;
-             --color-semantic-alert-500: #FFC133;
-             --color-semantic-alert-700: #B88000;
-             --color-semantic-danger-100: #FBD0D4;
-             --color-semantic-danger-200: #F27D86;
-             --color-semantic-danger-500: #C51321;
-             --color-semantic-danger-700: #660A11;
-             --color-semantic-info-200: #5C9DFF;
-             --color-semantic-info-500: #0061F4;
-             --color-semantic-info-700: #00398F;
-             --color-semantic-success-100: #CAF1C1;
-             --color-semantic-success-200: #96E283;
-             --color-semantic-success-500: #73D85A;
-             --color-semantic-success-700: #33841F;
-             }
-             body {
-             background-color: var(--color-neutrals-100);
-             margin: 0;
-             padding: 0;
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             height: 100vh;
-             }
-             .wrapper {
-             width: 220px; /* Ancho fijo del div padre */
-             }
-             .header {
-             display: flex;
-             align-items: center;
-             justify-content: space-between;
-             width: 100%; /* Ocupa todo el ancho disponible */
-             background-color: var(--color-brand-500);
-             padding: 0px;
-             border-radius: 8px 8px 0 0;
-             box-sizing: border-box;
-             }
-             .header img {
-             width: 90px;
-             }
-             .header i {
-             font-size: 24px; /* Tamaño del icono */
-             color: var(--color-neutrals-0);
-             border-radius: 4px; /* Border-radius de 4px */
-             width: 44px; /* Ancho del área clicable */
-             height: 44px; /* Alto del área clicable */
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             box-sizing: border-box;
-             outline: none; /* Elimina el outline por defecto en foco */
-             }
-             .header i:hover {
-             background-color: var(--color-brand-600); /* Fondo en hover */
-             }
-             .header i:focus {
-             background-color: var(--color-brand-500); /* Fondo igual que el enabled */
-             border: 2px solid var(--color-primary-700); /* Borde de 2px color --color-primary-700 */
-             }
-             .display {
-             width: 100%; /* Ocupa todo el ancho disponible */
-             background-color: var(--color-neutrals-0);
-             padding: 4px; /* Padding interior de 4px */
-             height: 208px; /* Alto de 199px */
-             box-sizing: border-box;
-             border-radius: 0; /* Sin border-radius, para que se junte con los otros divs */
-             position: relative; /* Necesario para posicionar la notificación */
-             }
-             .display img {
-             width: 100%; /* La imagen ocupa todo el ancho disponible */
-             height: 100%;
-             object-fit: cover; /* Asegura que la imagen cubra todo el div sin distorsionarse */
-             border-radius: 4px; /* Border-radius de 4px */
-             }
-             .error-notification {
-             position: absolute;
-             top: 8px;
-             left: 8px;
-             right: 8px;
-             max-height: 193px; /* Altura máxima de la notificación */
-             background-color: var(--color-neutrals-0);
-             border-radius: 4px;
-             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-             padding: 8px 8px 8px 16px;
-             display: flex;
-             flex-direction: column; /* Permite que el contenido se apile verticalmente */
-             box-sizing: border-box;
-             overflow-y: auto; /* Agrega scrollbar cuando hay overflow vertical */
-             overflow-x: hidden; /* Oculta cualquier scroll horizontal */
-             }
-             .error-notification::before {
-             content: '';
-             position: absolute;
-             top: 0;
-             left: 0;
-             width: 8px;
-             background-color: var(--color-semantic-danger-500);
-             border-radius: 4px 0 0 4px;
-             bottom: 0;
-             height: 100%;
-             }
-             .error-content {
-             flex-grow: 1;
-             margin-right: 8px;
-             overflow-y: auto; /* Habilita el scroll dentro del contenido */
-             word-wrap: break-word; /* Rompe las palabras largas para evitar scroll horizontal */
-             }
-             /* Estilos aplicados para error-title */
-             .body-body_medium_bold {
-             font-family: var(--font-family-montserrat);
-             font-size: var(--font-size-200);
-             font-weight: var(--font-weight-semibold);
-             line-height: var(--line-height-200);
-             letter-spacing: 0;
-             margin:0;
-             }
-             /* Estilos aplicados para error-message */
-             .body-body_medium {
-             font-family: var(--font-family-montserrat);
-             font-size: var(--font-size-200);
-             font-weight: var(--font-weight-regular);
-             line-height: var(--line-height-200);
-             letter-spacing: 0;
-             margin:0;
-             }
-             .body-body_link_small {
-             font-family: var(--font-family-montserrat);
-             font-size: var(--font-size-200);
-             font-weight: var(--font-weight-regular);
-             line-height: var(--line-height-200);
-             letter-spacing: 0;
-             margin:0;
-             text-decoration: none; /* Elimina subrayado por defecto */
-             }
-             .body-body_link_small:hover {
-             text-decoration: underline; /* Agrega subrayado en hover */
-             }
-             .body-body_link_small i {
-             font-size: 16px;
-             margin-left: 4px;
-             }
-             /* Estilos aplicados para footer */
-             .body-body_base_medium {
-             font-family: var(--font-family-montserrat);
-             font-size: var(--font-size-300);
-             font-weight: var(--font-weight-medium);
-             line-height: var(--line-height-300);
-             letter-spacing: 0;
-             }
-             .body-body_base_bold {
-             font-family: var(--font-family-montserrat);
-             font-size: var(--font-size-300);
-             font-weight: var(--font-weight-semibold);
-             line-height: var(--line-height-300);
-             letter-spacing: 0;
-             }
-             .close-icon {
-             font-size: 24px; /* Tamaño del icono */
-             color: var(--color-primary-700);
-             cursor: pointer;
-             position: absolute;
-             top: -8px;
-             right: -8px; /* Alinea el icono arriba a la derecha */
-             width: 44px; /* Ancho del área clicable */
-             height: 44px; /* Alto del área clicable */
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             border-radius: 4px; /* Border-radius de 4px */
-             box-sizing: border-box;
-             outline: none; /* Elimina el outline por defecto en foco */
-             }
-             .close-icon:hover {
-             background-color: var(--color-brand-200); /* Fondo en hover */
-             }
-             .close-icon:focus {
-             border: 2px solid var(--color-brand-500); /* Borde de 2px color --color-brand-500 en foco */
-             }
-             .tools {
-             display: flex;
-             justify-content: space-between;
-             gap: 4px;
-             width: 100%; /* Ocupa todo el ancho disponible */
-             background-color: var(--color-neutrals-0);
-             padding: 4px;
-             border-radius: 0; /* Sin border-radius, para que se junte con los otros divs */
-             box-sizing: border-box;
-             }
-             .box {
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             flex-grow: 1;
-             background-color: var(--color-semantic-danger-100);
-             border-radius: 4px;
-             padding: 4px 0px; /* Padding por defecto para 220px de ancho */
-             box-sizing: border-box;
-             position: relative; /* Necesario para el tooltip */
-             cursor: pointer;
-             flex-basis: 25%; /* Asigna un ancho fijo a todos los box */
-             }
-             .box::after {
-             content: 'Herramienta no conectada';
-             position: absolute;
-             bottom: 100%; /* Tooltip aparece por encima del box */
-             left: 50%;
-             transform: translateX(-50%);
-             background-color: var(--color-neutrals-0); /* Fondo blanco */
-             color: var(--color-primary-700); /* Texto en color de peligro */
-             padding: 5px 10px;
-             border-radius: 4px;
-             white-space: nowrap;
-             font-size: var(--font-size-100); /* Aplica tamaño de fuente pequeño */
-             opacity: 0;
-             visibility: hidden;
-             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-             transition: opacity 0.3s ease, visibility 0.3s ease;
-             font-family: var(--font-family-montserrat);
-             font-weight: var(--font-weight-regular);
-             line-height: var(--line-height-200);
-             letter-spacing: 0;
-             z-index: 1; /* Asegura que el tooltip aparezca encima de otros elementos */
-             }
-             .box:hover::after {
-             opacity: 1;
-             visibility: visible;
-             }
-             /* Estilos específicos para el primer .box */
-             .tools .box:first-child {
-             background-color: var(--color-neutrals-0); /* Fondo blanco */
-             border: 1px solid var(--color-neutrals-400); /* Borde gris claro */
-             position: relative; /* Necesario para la barra de carga */
-             flex-direction: column; /* Para alinear el icono y el loader en columna */
-             gap: 4px; /* Espacio entre el icono y el loader */
-             }
-             /* Tooltip específico para el primer box */
-             .tools .box:first-child::after {
-             content: 'Cámara conectando...';
-             }
-             .tools .box:first-child .icon-24 {
-             color: var(--color-primary-700);
-             }
-             .tools .box:first-child .loader-bar {
-             width: 90%;
-             height: 4px;
-             background-color: var(--color-neutrals-200); /* Color de fondo de la barra */
-             border-radius: 2px; 
-             overflow: hidden;
-             position: relative;
-             }
-             .tools .box:first-child .loader-bar::before {
-             content: '';
-             display: block;
-             height: 100%;
-             background-color: var(--color-brand-500);
-             border-radius: 2px; 
-             animation: loader-animation 3s infinite; /* Duración de 3 segundos para cumplir con la WCAG */
-             }
-             /* Estilos específicos para el segundo .box */
-             .tools .box:nth-child(2) {
-             background-color: var(--color-primary-700); /* Fondo azul oscuro */
-             }
-             .tools .box:nth-child(2)::after {
-             content: 'Audio conectado'; /* Tooltip para el segundo box */
-             }
-             .tools .box:nth-child(2) .icon-24 {
-             color: var(--color-neutrals-0); /* Icono de micrófono en blanco */
-             }
-             .icon-24 {
-             font-size: 24px;
-             color: var(--color-semantic-danger-700);
-             margin-right:2px;
-             }
-             .icon-20 {
-             font-size: 14px; /* Tamaño reducido a 20px */
-             color: var(--color-semantic-danger-700);
-             }
-             .box i:last-child {
-             margin-right: 0; /* Elimina el margen derecho del último icono */
-             }
-             .footer {
-             width: 100%; /* Ocupa todo el ancho disponible */
-             background-color: var(--color-neutrals-0);
-             padding: 8px; /* Padding de 8px en los lados y arriba, 16px abajo */
-             border-radius: 0 0 8px 8px; /* Esquinas inferiores redondeadas */
-             text-align: center;
-             box-sizing: border-box;
-             margin-top: -4px; /* Elimina la separación con el div superior */
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             }
-             .recording-indicator {
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             position: relative;
-             width: 24px; /* Ancho total del indicador */
-             height: 24px; /* Alto total del indicador */
-             }
-             .small-ball {
-             width: 8px;
-             height: 8px;
-             background-color: var(--color-semantic-danger-500);
-             border-radius: 50%;
-             position: absolute;
-             z-index: 1; /* Asegura que esté encima de la bola grande */
-             }
-             .large-ball {
-             width: 12px;
-             height: 12px;
-             background-color: var(--color-semantic-danger-100);
-             border-radius: 50%;
-             animation: recording-pulse 2s infinite ease-in-out;
-             }
-             @media (prefers-reduced-motion: reduce) {
-             .recording-indicator, .loader-bar::before {
-             animation: none;
-             }
-             }
-          </style>
-       </head>
-       <body>
-          <div class="wrapper" role="region" aria-label="Widget Smowltech" >
-             <div class="header">
-                <i class="fas fa-arrows-alt" role="button" tabindex="0" aria-label="Arrastrar widget" ></i> <!-- Icono de arrastre con cuatro flechas -->
-                <img src="https://i.imgur.com/6GEo7al.png" alt="Logotipo de smowltech" >
-                <i class="fas fa-sync-alt" role="button" tabindex="0" aria-label="Refrescar todo el widget"></i> <!-- Icono de refrescar -->
-             </div>
-             <div class="tools">
-                <div class="box" id="webcam-box" >
-                   <i class="fas fa-video icon-24" aria-hidden="true"></i>
-                   <div class="loader-bar"></div>
-                   <!-- Barra de carga animada -->
-                </div>
-                <div class="box" id="audio-box" >
-                   <i class="fas fa-microphone icon-24" aria-hidden="true"></i> <!-- Solo el icono de micrófono en blanco -->
-                </div>
-                <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado">
-                   <i class="fas fa-laptop icon-24" role="button"></i>
-                   <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
-                </div>
-                <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada">
-                   <i class="fas fa-puzzle-piece icon-24" aria-hidden="true"></i>
-                   <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
-                </div>
-             </div>
-             <div class="display">
-                <div class="error-notification" aria-live="polite" role="alert" aria-relevant="all">
-                   <div class="error-content">
-                      <p class="body-body_medium_bold" id="error-title">SMOWLCM no conectado</p>
-                      <!-- Aplicando estilo body-body_medium_bold -->
-                      <p class="body-body_medium" id="error-message">Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Aenean malesuada orci ac nibh auctor, non tristique ligula luctus. Curabitur laoreet auctor eros, nec placerat dui convallis at. Quisque auctor ornare ligula, id malesuada turpis lacinia at. Donec in fermentum lorem, vitae varius velit. Donec posuere est non augue dictum, ac consectetur odio vehicula. Sed tristique pharetra leo, nec laoreet urna facilisis a. Nam dapibus nec sem a bibendum. Vivamus convallis felis ut mi convallis, et facilisis orci cursus. Praesent luctus elit quis risus congue, in aliquet enim interdum. Cras in efficitur sem, in venenatis mi.</p>
-                      <!-- Aplicando estilo body-body_medium -->
-                      <a href="#" class="body-body_link_small" aria-label="Más información">Más información<i class="fas fa-external-link" style="font-size: 16px; margin-left: 4px;"></i></a> <!-- Link con icono a la derecha -->
-                   </div>
-                   <i class="fas fa-times close-icon" role="button" tabindex="0" aria-label="Botón cerrar notificación"></i>
-                </div>
-                <img alt="" src="https://i.imgur.com/2mfaI3h.png">
-             </div>
-             <div class="footer">
-                <div class="recording-indicator">
-                   <div class="small-ball"></div>
-                   <div class="large-ball"></div>
-                </div>
-                <div role="status" aria-live="assertive" aria-atomic="true" aria-relevant="text">
-                   <span class="body-body_base_medium" id="system-status">System Check</span>
-                </div>
-             </div>
-          </div>
-          <script>
-             // Función para cambiar el contenido de la notificación de error y resetear el scroll
-             function updateErrorNotification(title, message) {
-             const errorNotification = document.querySelector('.error-notification');
-             const errorContent = document.querySelector('.error-content');
-
-             // Actualizar el título y el mensaje de la notificación
-             document.getElementById('error-title').innerText = title;
-             document.getElementById('error-message').innerText = message;
-
-             // Resetear el scroll del contenido de la notificación al principio
-             errorContent.scrollTop = 0;
-
-             // Mostrar la notificación si está oculta
-             errorNotification.style.display = 'flex';
-             }
-
-             // Función para cerrar la notificación de error
-             function closeErrorNotification() {
-             const errorNotification = document.querySelector('.error-notification');
-             errorNotification.style.display = 'none';
-             }
-
-             // Event listener para cerrar la notificación
-             document.querySelector('.close-icon').addEventListener('click', closeErrorNotification);
-
-             // Event listener para el tercer box (SMOWLCM)
-             document.getElementById('smowlcm-box').addEventListener('click', function() {
-             updateErrorNotification(
-              'SMOWLCM no conectado',
-              'Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible.'
-             );
-             });
-
-             // Event listener para el cuarto box (Extensión)
-             document.getElementById('extension-box').addEventListener('click', function() {
-             updateErrorNotification(
-              'Extensión no conectada',
-              'La extensión del navegador no se encuentra conectada. Por favor, asegúrate de que la extensión esté instalada y habilitada en tu navegador. Si el problema persiste, intenta reiniciar el navegador o ponte en contacto con el soporte técnico para obtener ayuda adicional. Este mensaje se ajustará automáticamente para que puedas leer toda la información importante.'
-             );
-             });
-          </script>
-       </body>
-    </html>
+<!DOCTYPE html>
+<html lang="es">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Smowltech Widget</title>
+      <!-- Incluye FontAwesome -->
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+      <style>
+         @keyframes recording-pulse {
+         0% {
+         transform: scale(1);
+         opacity: 0.8;
+         }
+         50% {
+         transform: scale(1.4);
+         opacity: 0.9;
+         }
+         100% {
+         transform: scale(1);
+         opacity: 1;
+         }
+         }
+         @keyframes loader-animation {
+         0% {
+         width: 0;
+         }
+         50% {
+         width: 100%;
+         }
+         100% {
+         width: 0;
+         }
+         }
+         :root {
+         /* Font Sizes */
+         --font-size-100: 0.75rem;
+         --font-size-200: 0.875rem;
+         --font-size-300: 1rem;
+         --font-size-400: 1.25rem;
+         --font-size-500: 1.5rem;
+         --font-size-600: 2rem;
+         --font-size-700: 2.5rem;
+         --font-size-800: 3rem;
+         --font-size-900: 4rem;
+         --font-size-1000: 5rem;
+         /* Line Heights */
+         --line-height-100: 1rem;
+         --line-height-200: 1.25rem;
+         --line-height-300: 1.5rem;
+         --line-height-400: 2rem;
+         --line-height-500: 2.5rem;
+         --line-height-600: 3rem;
+         --line-height-700: 4rem;
+         --line-height-800: 5rem;
+         /* Font Family */
+         --font-family-montserrat: Montserrat;
+         /* Font Weights */
+         --font-weight-regular: 400;
+         --font-weight-medium: 500;
+         --font-weight-semibold: 600;
+         --font-weight-bold: 700;
+         /* Colors */
+         --color-brand-100: #D1F1FF;
+         --color-brand-200: #9EE2FF;
+         --color-brand-300: #6BD2FF;
+         --color-brand-400: #05B4FF;
+         --color-brand-500: #0092D1;
+         --color-brand-600: #006E9E;
+         --color-brand-700: #004B6B;
+         --color-neutrals-0: #FFFFFF;
+         --color-neutrals-100: #E9E9EC;
+         --color-neutrals-200: #E0E0E4;
+         --color-neutrals-300: #D9D9DE;
+         --color-neutrals-400: #CCCCD3;
+         --color-neutrals-500: #ADADB5;
+         --color-neutrals-600: #8F959B;
+         --color-primary-100: #EBEBEE;
+         --color-primary-200: #E0E0E4;
+         --color-primary-300: #CCCCD3;
+         --color-primary-400: #ADADB5;
+         --color-primary-500: #7C828A;
+         --color-primary-600: #5C6573;
+         --color-primary-700: #1C304B;
+         --color-primary-800: #0B131E;
+         --color-semantic-alert-100: #FFE099;
+         --color-semantic-alert-200: #FFD166;
+         --color-semantic-alert-500: #FFC133;
+         --color-semantic-alert-700: #B88000;
+         --color-semantic-danger-100: #FBD0D4;
+         --color-semantic-danger-200: #F27D86;
+         --color-semantic-danger-500: #C51321;
+         --color-semantic-danger-700: #660A11;
+         --color-semantic-info-200: #5C9DFF;
+         --color-semantic-info-500: #0061F4;
+         --color-semantic-info-700: #00398F;
+         --color-semantic-success-100: #CAF1C1;
+         --color-semantic-success-200: #96E283;
+         --color-semantic-success-500: #73D85A;
+         --color-semantic-success-700: #33841F;
+         }
+         body {
+         background-color: var(--color-neutrals-100);
+         margin: 0;
+         padding: 0;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+         }
+         .wrapper {
+         width: 220px; /* Ancho fijo del div padre */
+         }
+         .header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         width: 100%; /* Ocupa todo el ancho disponible */
+         background-color: var(--color-brand-500);
+         padding: 0px;
+         border-radius: 8px 8px 0 0;
+         box-sizing: border-box;
+         }
+         .header img {
+         width: 90px;
+         }
+         .header i {
+         font-size: 24px; /* Tamaño del icono */
+         color: var(--color-neutrals-0);
+         border-radius: 4px; /* Border-radius de 4px */
+         width: 44px; /* Ancho del área clicable */
+         height: 44px; /* Alto del área clicable */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         box-sizing: border-box;
+         outline: none; /* Elimina el outline por defecto en foco */
+         }
+         .header i:hover {
+         background-color: var(--color-brand-600); /* Fondo en hover */
+         }
+         .header i:focus {
+         background-color: var(--color-brand-500); /* Fondo igual que el enabled */
+         border: 2px solid var(--color-primary-700); /* Borde de 2px color --color-primary-700 */
+         }
+         .display {
+         width: 100%; /* Ocupa todo el ancho disponible */
+         background-color: var(--color-neutrals-0);
+         padding: 4px; /* Padding interior de 4px */
+         height: 208px; /* Alto de 199px */
+         box-sizing: border-box;
+         border-radius: 0; /* Sin border-radius, para que se junte con los otros divs */
+         position: relative; /* Necesario para posicionar la notificación */
+         }
+         .display img {
+         width: 100%; /* La imagen ocupa todo el ancho disponible */
+         height: 100%;
+         object-fit: cover; /* Asegura que la imagen cubra todo el div sin distorsionarse */
+         border-radius: 4px; /* Border-radius de 4px */
+         }
+         .error-notification {
+         position: absolute;
+         top: 8px;
+         left: 8px;
+         right: 8px;
+         max-height: 193px; /* Altura máxima de la notificación */
+         background-color: var(--color-neutrals-0);
+         border-radius: 4px;
+         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+         padding: 8px 8px 8px 16px;
+         display: flex;
+         flex-direction: column; /* Permite que el contenido se apile verticalmente */
+         box-sizing: border-box;
+         overflow-y: auto; /* Agrega scrollbar cuando hay overflow vertical */
+         overflow-x: hidden; /* Oculta cualquier scroll horizontal */
+         }
+         .error-notification::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 8px;
+         background-color: var(--color-semantic-danger-500);
+         border-radius: 4px 0 0 4px;
+         bottom: 0;
+         height: 100%;
+         }
+         .error-content {
+         flex-grow: 1;
+         margin-right: 8px;
+         overflow-y: auto; /* Habilita el scroll dentro del contenido */
+         word-wrap: break-word; /* Rompe las palabras largas para evitar scroll horizontal */
+         }
+         /* Estilos aplicados para error-title */
+         .body-body_medium_bold {
+         font-family: var(--font-family-montserrat);
+         font-size: var(--font-size-200);
+         font-weight: var(--font-weight-semibold);
+         line-height: var(--line-height-200);
+         letter-spacing: 0;
+         margin:0;
+         }
+         /* Estilos aplicados para error-message */
+         .body-body_medium {
+         font-family: var(--font-family-montserrat);
+         font-size: var(--font-size-200);
+         font-weight: var(--font-weight-regular);
+         line-height: var(--line-height-200);
+         letter-spacing: 0;
+         margin:0;
+         }
+         .body-body_link_small {
+         font-family: var(--font-family-montserrat);
+         font-size: var(--font-size-200);
+         font-weight: var(--font-weight-regular);
+         line-height: var(--line-height-200);
+         letter-spacing: 0;
+         margin:0;
+         text-decoration: none; /* Elimina subrayado por defecto */
+         }
+         .body-body_link_small:hover {
+         text-decoration: underline; /* Agrega subrayado en hover */
+         }
+         .body-body_link_small i {
+         font-size: 16px;
+         margin-left: 4px;
+         }
+         /* Estilos aplicados para footer */
+         .body-body_base_medium {
+         font-family: var(--font-family-montserrat);
+         font-size: var(--font-size-300);
+         font-weight: var(--font-weight-medium);
+         line-height: var(--line-height-300);
+         letter-spacing: 0;
+         }
+         .body-body_base_bold {
+         font-family: var(--font-family-montserrat);
+         font-size: var(--font-size-300);
+         font-weight: var(--font-weight-semibold);
+         line-height: var(--line-height-300);
+         letter-spacing: 0;
+         }
+         .close-icon {
+         font-size: 24px; /* Tamaño del icono */
+         color: var(--color-primary-700);
+         cursor: pointer;
+         position: absolute;
+         top: -8px;
+         right: -8px; /* Alinea el icono arriba a la derecha */
+         width: 44px; /* Ancho del área clicable */
+         height: 44px; /* Alto del área clicable */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         border-radius: 4px; /* Border-radius de 4px */
+         box-sizing: border-box;
+         outline: none; /* Elimina el outline por defecto en foco */
+         }
+         .close-icon:hover {
+         background-color: var(--color-brand-200); /* Fondo en hover */
+         }
+         .close-icon:focus {
+         border: 2px solid var(--color-brand-500); /* Borde de 2px color --color-brand-500 en foco */
+         }
+         .tools {
+         display: flex;
+         justify-content: space-between;
+         gap: 4px;
+         width: 100%; /* Ocupa todo el ancho disponible */
+         background-color: var(--color-neutrals-0);
+         padding: 4px;
+         border-radius: 0; /* Sin border-radius, para que se junte con los otros divs */
+         box-sizing: border-box;
+         }
+         .box {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         background-color: var(--color-semantic-danger-100);
+         border-radius: 4px;
+         padding: 4px 0px; /* Padding por defecto para 220px de ancho */
+         box-sizing: border-box;
+         position: relative; /* Necesario para el tooltip */
+         cursor: pointer;
+         flex-basis: 25%; /* Asigna un ancho fijo a todos los box */
+         }
+         .box::after {
+         content: 'Herramienta no conectada';
+         position: absolute;
+         bottom: 100%; /* Tooltip aparece por encima del box */
+         left: 50%;
+         transform: translateX(-50%);
+         background-color: var(--color-neutrals-0); /* Fondo blanco */
+         color: var(--color-primary-700); /* Texto en color de peligro */
+         padding: 5px 10px;
+         border-radius: 4px;
+         white-space: nowrap;
+         font-size: var(--font-size-100); /* Aplica tamaño de fuente pequeño */
+         opacity: 0;
+         visibility: hidden;
+         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+         transition: opacity 0.3s ease, visibility 0.3s ease;
+         font-family: var(--font-family-montserrat);
+         font-weight: var(--font-weight-regular);
+         line-height: var(--line-height-200);
+         letter-spacing: 0;
+         z-index: 1; /* Asegura que el tooltip aparezca encima de otros elementos */
+         }
+         .box:hover::after {
+         opacity: 1;
+         visibility: visible;
+         }
+         /* Estilos específicos para el primer .box */
+         .tools .box:first-child {
+         background-color: var(--color-neutrals-0); /* Fondo blanco */
+         border: 1px solid var(--color-neutrals-400); /* Borde gris claro */
+         position: relative; /* Necesario para la barra de carga */
+         flex-direction: column; /* Para alinear el icono y el loader en columna */
+         gap: 4px; /* Espacio entre el icono y el loader */
+         }
+         /* Tooltip específico para el primer box */
+         .tools .box:first-child::after {
+         content: 'Cámara conectando...';
+         }
+         .tools .box:first-child .icon-24 {
+         color: var(--color-primary-700);
+         }
+         .tools .box:first-child .loader-bar {
+         width: 90%;
+         height: 4px;
+         background-color: var(--color-neutrals-200); /* Color de fondo de la barra */
+         border-radius: 2px; 
+         overflow: hidden;
+         position: relative;
+         }
+         .tools .box:first-child .loader-bar::before {
+         content: '';
+         display: block;
+         height: 100%;
+         background-color: var(--color-brand-500);
+         border-radius: 2px; 
+         animation: loader-animation 3s infinite; /* Duración de 3 segundos para cumplir con la WCAG */
+         }
+         /* Estilos específicos para el segundo .box */
+         .tools .box:nth-child(2) {
+         background-color: var(--color-primary-700); /* Fondo azul oscuro */
+         }
+         .tools .box:nth-child(2)::after {
+         content: 'Audio conectado'; /* Tooltip para el segundo box */
+         }
+         .tools .box:nth-child(2) .icon-24 {
+         color: var(--color-neutrals-0); /* Icono de micrófono en blanco */
+         }
+         .icon-24 {
+         font-size: 24px;
+         color: var(--color-semantic-danger-700);
+         margin-right:2px;
+         }
+         .icon-20 {
+         font-size: 14px; /* Tamaño reducido a 20px */
+         color: var(--color-semantic-danger-700);
+         }
+         .box i:last-child {
+         margin-right: 0; /* Elimina el margen derecho del último icono */
+         }
+         .footer {
+         width: 100%; /* Ocupa todo el ancho disponible */
+         background-color: var(--color-neutrals-0);
+         padding: 8px; /* Padding de 8px en los lados y arriba, 16px abajo */
+         border-radius: 0 0 8px 8px; /* Esquinas inferiores redondeadas */
+         text-align: center;
+         box-sizing: border-box;
+         margin-top: -4px; /* Elimina la separación con el div superior */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         }
+         .recording-indicator {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         position: relative;
+         width: 24px; /* Ancho total del indicador */
+         height: 24px; /* Alto total del indicador */
+         }
+         .small-ball {
+         width: 8px;
+         height: 8px;
+         background-color: var(--color-semantic-danger-500);
+         border-radius: 50%;
+         position: absolute;
+         z-index: 1; /* Asegura que esté encima de la bola grande */
+         }
+         .large-ball {
+         width: 12px;
+         height: 12px;
+         background-color: var(--color-semantic-danger-100);
+         border-radius: 50%;
+         animation: recording-pulse 2s infinite ease-in-out;
+         }
+         @media (prefers-reduced-motion: reduce) {
+         .recording-indicator, .loader-bar::before {
+         animation: none;
+         }
+         }
+      </style>
+   </head>
+   <body>
+      <div class="wrapper" role="region" aria-label="Widget Smowltech" >
+         <div class="header">
+            <i class="fas fa-arrows-alt" role="button" tabindex="0" aria-label="Arrastrar widget" ></i> <!-- Icono de arrastre con cuatro flechas -->
+            <img src="https://i.imgur.com/6GEo7al.png" alt="Logotipo de smowltech" >
+            <i class="fas fa-sync-alt" role="button" tabindex="0" aria-label="Refrescar todo el widget"></i> <!-- Icono de refrescar -->
+         </div>
+         <div class="tools">
+            <div class="box" id="webcam-box" >
+               <i class="fas fa-video icon-24" aria-hidden="true"></i>
+               <div class="loader-bar"></div>
+               <!-- Barra de carga animada -->
+            </div>
+            <div class="box" id="audio-box" >
+               <i class="fas fa-microphone icon-24" aria-hidden="true"></i> <!-- Solo el icono de micrófono en blanco -->
+            </div>
+            <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado">
+               <i class="fas fa-laptop icon-24" role="button"></i>
+               <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
+            </div>
+            <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada">
+               <i class="fas fa-puzzle-piece icon-24" aria-hidden="true"></i>
+               <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
+            </div>
+         </div>
+         <div class="display">
+            <div class="error-notification" aria-live="polite" role="alert" aria-relevant="all">
+               <div class="error-content">
+                  <p class="body-body_medium_bold" id="error-title">SMOWLCM no conectado</p>
+                  <!-- Aplicando estilo body-body_medium_bold -->
+                  <p class="body-body_medium" id="error-message">Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Aenean malesuada orci ac nibh auctor, non tristique ligula luctus. Curabitur laoreet auctor eros, nec placerat dui convallis at. Quisque auctor ornare ligula, id malesuada turpis lacinia at. Donec in fermentum lorem, vitae varius velit. Donec posuere est non augue dictum, ac consectetur odio vehicula. Sed tristique pharetra leo, nec laoreet urna facilisis a. Nam dapibus nec sem a bibendum. Vivamus convallis felis ut mi convallis, et facilisis orci cursus. Praesent luctus elit quis risus congue, in aliquet enim interdum. Cras in efficitur sem, in venenatis mi.</p>
+                  <!-- Aplicando estilo body-body_medium -->
+                  <a href="#" class="body-body_link_small" aria-label="Más información">Más información<i class="fas fa-external-link" style="font-size: 16px; margin-left: 4px;"></i></a> <!-- Link con icono a la derecha -->
+               </div>
+               <i class="fas fa-times close-icon" role="button" tabindex="0" aria-label="Botón cerrar notificación"></i>
+            </div>
+            <img alt="" src="https://i.imgur.com/2mfaI3h.png">
+         </div>
+         <div class="footer">
+            <div class="recording-indicator">
+               <div class="small-ball"></div>
+               <div class="large-ball"></div>
+            </div>
+            <div role="status" aria-live="assertive" aria-atomic="true" aria-relevant="text">
+               <span class="body-body_base_medium" id="system-status">System Check</span>
+            </div>
+         </div>
+      </div>
+      <script>
+         // Función para cambiar el contenido de la notificación de error y resetear el scroll
+         function updateErrorNotification(title, message) {
+         const errorNotification = document.querySelector('.error-notification');
+         const errorContent = document.querySelector('.error-content');
+         
+         // Actualizar el título y el mensaje de la notificación
+         document.getElementById('error-title').innerText = title;
+         document.getElementById('error-message').innerText = message;
+         
+         // Resetear el scroll del contenido de la notificación al principio
+         errorContent.scrollTop = 0;
+         
+         // Mostrar la notificación si está oculta
+         errorNotification.style.display = 'flex';
+         }
+         
+         // Función para cerrar la notificación de error
+         function closeErrorNotification() {
+         const errorNotification = document.querySelector('.error-notification');
+         errorNotification.style.display = 'none';
+         }
+         
+         // Event listener para cerrar la notificación
+         document.querySelector('.close-icon').addEventListener('click', closeErrorNotification);
+         
+         // Event listener para el tercer box (SMOWLCM)
+         document.getElementById('smowlcm-box').addEventListener('click', function() {
+         updateErrorNotification(
+          'SMOWLCM no conectado',
+          'Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible.'
+         );
+         });
+         
+         // Event listener para el cuarto box (Extensión)
+         document.getElementById('extension-box').addEventListener('click', function() {
+         updateErrorNotification(
+          'Extensión no conectada',
+          'La extensión del navegador no se encuentra conectada. Por favor, asegúrate de que la extensión esté instalada y habilitada en tu navegador. Si el problema persiste, intenta reiniciar el navegador o ponte en contacto con el soporte técnico para obtener ayuda adicional. Este mensaje se ajustará automáticamente para que puedas leer toda la información importante.'
+         );
+         });
+         // Función para cerrar la notificación de error
+         function closeErrorNotification() {
+         const errorNotification = document.querySelector('.error-notification');
+         errorNotification.style.display = 'none';
+         }
+         
+         // Event listener para cerrar la notificación con clic
+         document.querySelector('.close-icon').addEventListener('click', closeErrorNotification);
+         
+         // Event listener para cerrar la notificación con teclado (Enter y Espacio)
+         document.querySelector('.close-icon').addEventListener('keydown', function(event) {
+         if (event.key === 'Enter' || event.key === ' ') {
+         event.preventDefault(); // Evita que la página se desplace al presionar Espacio
+         closeErrorNotification();
+         }
+         });
+      </script>
+   </body>
+</html>
