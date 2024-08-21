@@ -422,11 +422,11 @@
             <div class="box" id="audio-box" >
                <i class="fas fa-microphone icon-24" aria-hidden="true"></i> <!-- Solo el icono de micrófono en blanco -->
             </div>
-            <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado">
-               <i class="fas fa-laptop icon-24" role="button"></i>
+            <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado" tabindex="0">
+               <i class="fas fa-laptop icon-24" aria-hidden="true"></i>
                <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
             </div>
-            <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada">
+            <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada" tabindex="0">
                <i class="fas fa-puzzle-piece icon-24" aria-hidden="true"></i>
                <i class="fas fa-exclamation-circle icon-20" aria-hidden="true"></i>
             </div>
@@ -487,6 +487,15 @@
           'Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible.'
          );
          });
+         document.getElementById('smowlcm-box').addEventListener('keydown', function(event) {
+         if (event.key === 'Enter' || event.key === ' ') {
+         event.preventDefault();
+         updateErrorNotification(
+         'SMOWLCM no conectado',
+          'Hubo un problema con la conexión. Este es un texto de error muy largo que demuestra cómo se comporta el contenido dentro del contenedor de notificación cuando excede la altura máxima permitida. La barra de desplazamiento (scrollbar) aparecerá automáticamente si el contenido es demasiado largo para caber en el espacio disponible.'
+         );
+         }
+         });
          
          // Event listener para el cuarto box (Extensión)
          document.getElementById('extension-box').addEventListener('click', function() {
@@ -495,6 +504,16 @@
           'La extensión del navegador no se encuentra conectada. Por favor, asegúrate de que la extensión esté instalada y habilitada en tu navegador. Si el problema persiste, intenta reiniciar el navegador o ponte en contacto con el soporte técnico para obtener ayuda adicional. Este mensaje se ajustará automáticamente para que puedas leer toda la información importante.'
          );
          });
+         document.getElementById('extension-box').addEventListener('keydown', function(event) {
+         if (event.key === 'Enter' || event.key === ' ') {
+         event.preventDefault();
+         updateErrorNotification(
+         'Extensión no conectada',
+         'La extensión del navegador no se encuentra conectada. Por favor, asegúrate de que la extensión esté instalada y habilitada en tu navegador. Si el problema persiste, intenta reiniciar el navegador o ponte en contacto con el soporte técnico para obtener ayuda adicional. Este mensaje se ajustará automáticamente para que puedas leer toda la información importante.'
+         );
+         }
+         });
+         
          // Función para cerrar la notificación de error
          function closeErrorNotification() {
          const errorNotification = document.querySelector('.error-notification');
