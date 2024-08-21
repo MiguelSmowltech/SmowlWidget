@@ -259,8 +259,7 @@
          .close-icon:hover {
          background-color: var(--color-brand-200); /* Fondo en hover */
          }
-         .close-icon:focus,
-         .box[tabindex="0"]:focus {
+         .close-icon:focus {
          border: 2px solid var(--color-brand-500); /* Borde de 2px color --color-brand-500 en foco */
          }
          .tools {
@@ -423,11 +422,11 @@
             <div class="box" id="audio-box" aria-label="Audio conectado">
                <i class="fas fa-microphone icon-24" aria-hidden="true"></i> <!-- Solo el icono de micrófono en blanco -->
             </div>
-            <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado" tabindex="0">
+            <div class="box" id="smowlcm-box" role="button" aria-live="assertive" aria-label="SmowlCM no conectado">
                <i class="fas fa-laptop icon-24" role="button"></i>
                <i class="fas fa-exclamation-circle icon-20" aria-label="icono de error"></i>
             </div>
-            <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada" tabindex="0">
+            <div class="box" id="extension-box" role="button" aria-live="assertive" aria-label="Extensión no conectada">
                <i class="fas fa-puzzle-piece icon-24" aria-hidden="true"></i>
                <i class="fas fa-exclamation-circle icon-20" aria-label="icono de error"></i>
             </div>
